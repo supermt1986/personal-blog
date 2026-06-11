@@ -1,5 +1,5 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
-import { GetCommand, PutCommand, QueryCommand, ScanCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb'
+import { GetCommand, PutCommand, QueryCommand, ScanCommand } from '@aws-sdk/lib-dynamodb'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
@@ -13,12 +13,14 @@ const TAGS_TABLE = process.env.TAGS_TABLE!
 const COMMENTS_TABLE = process.env.COMMENTS_TABLE!
 const S3_BUCKET = process.env.S3_BUCKET!
 
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'http://localhost:3000'
+
 const headers = {
   'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': '*'
+  'Access-Control-Allow-Origin': ALLOWED_ORIGIN
 }
 
-export const main = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handleApiRequest = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const path = event.path || ''
   const method = event.httpMethod || 'GET'
 
