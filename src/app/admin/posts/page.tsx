@@ -32,9 +32,15 @@ export default function AdminPostsPage() {
     fetchPosts()
   }, [])
 
-  const handleDelete = (postId: string, title: string) => {
+  const handleDelete = async (postId: string, title: string) => {
     if (window.confirm(`「${title}」を削除してもよろしいですか？`)) {
-      setPostList(postList.filter(p => p.postId !== postId))
+      try {
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || ''
+        await fetch(`${API_BASE}/api/posts/${postId}`, { method: 'DELETE' })
+        setPostList(postList.filter(p => p.postId !== postId))
+      } catch (error) {
+        alert('削除に失敗しました')
+      }
     }
   }
 

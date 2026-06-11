@@ -4,6 +4,8 @@ import PostContent from '@/components/PostContent'
 import CommentList from '@/components/CommentList'
 import CommentForm from '@/components/CommentForm'
 
+export const dynamic = 'force-dynamic'
+
 export default async function PostPage({ params }: { params: { id: string } }) {
   const post = await getPost(params.id)
   if (!post) notFound()

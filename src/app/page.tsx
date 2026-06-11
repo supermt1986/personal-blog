@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { getPosts } from '@/lib/api'
 import PostCard from '@/components/PostCard'
 
+export const dynamic = 'force-dynamic'
+
 export default async function HomePage() {
   const posts = await getPosts()
 

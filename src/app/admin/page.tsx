@@ -1,5 +1,7 @@
 import { getPosts, getCategories } from '@/lib/api'
 
+export const dynamic = 'force-dynamic'
+
 export default async function AdminDashboard() {
   const posts = await getPosts()
   const categories = await getCategories()
