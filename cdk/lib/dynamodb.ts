@@ -1,5 +1,5 @@
 import { Construct } from 'constructs'
-import { Table, TableProps, BillingMode } from 'aws-cdk-lib/aws-dynamodb'
+import { Table, BillingMode, AttributeType } from 'aws-cdk-lib/aws-dynamodb'
 
 export class BlogDynamoDB extends Construct {
   public readonly postsTable: Table
@@ -11,27 +11,27 @@ export class BlogDynamoDB extends Construct {
     super(scope, id)
 
     this.postsTable = new Table(this, 'Posts', {
-      partitionKey: { name: 'PK', type: 'S' },
-      sortKey: { name: 'SK', type: 'S' },
+      partitionKey: { name: 'PK', type: AttributeType.STRING },
+      sortKey: { name: 'SK', type: AttributeType.STRING },
       billingMode: BillingMode.PAY_PER_REQUEST
-    } as TableProps)
+    })
 
     this.categoriesTable = new Table(this, 'Categories', {
-      partitionKey: { name: 'PK', type: 'S' },
-      sortKey: { name: 'SK', type: 'S' },
+      partitionKey: { name: 'PK', type: AttributeType.STRING },
+      sortKey: { name: 'SK', type: AttributeType.STRING },
       billingMode: BillingMode.PAY_PER_REQUEST
-    } as TableProps)
+    })
 
     this.tagsTable = new Table(this, 'Tags', {
-      partitionKey: { name: 'PK', type: 'S' },
-      sortKey: { name: 'SK', type: 'S' },
+      partitionKey: { name: 'PK', type: AttributeType.STRING },
+      sortKey: { name: 'SK', type: AttributeType.STRING },
       billingMode: BillingMode.PAY_PER_REQUEST
-    } as TableProps)
+    })
 
     this.commentsTable = new Table(this, 'Comments', {
-      partitionKey: { name: 'PK', type: 'S' },
-      sortKey: { name: 'SK', type: 'S' },
+      partitionKey: { name: 'PK', type: AttributeType.STRING },
+      sortKey: { name: 'SK', type: AttributeType.STRING },
       billingMode: BillingMode.PAY_PER_REQUEST
-    } as TableProps)
+    })
   }
 }

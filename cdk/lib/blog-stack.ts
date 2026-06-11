@@ -5,7 +5,6 @@ import { Bucket } from 'aws-cdk-lib/aws-s3'
 import { Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { Function, Runtime, Code } from 'aws-cdk-lib/aws-lambda'
 import { RestApi, LambdaIntegration } from 'aws-cdk-lib/aws-apigateway'
-import { UserPool, UserPoolClient } from 'aws-cdk-lib/aws-cognito'
 
 export class BlogStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -48,13 +47,5 @@ export class BlogStack extends Stack {
     api.root.addResource('tags').addMethod('GET', new LambdaIntegration(apiHandler))
     api.root.addResource('comments').addMethod('GET', new LambdaIntegration(apiHandler))
     api.root.addResource('admin').addMethod('POST', new LambdaIntegration(apiHandler))
-
-    const userPool = new UserPool(this, 'BlogUserPool', {
-      userPoolName: 'blog-admin-users'
-    })
-
-    new UserPoolClient(this, 'BlogAdminClient', {
-      userPool: userPool
-    })
   }
 }
