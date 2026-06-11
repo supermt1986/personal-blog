@@ -2,3 +2,4 @@
 node_modules/
 cdk/dist/
 lambda/dist/
+cdk.out/
