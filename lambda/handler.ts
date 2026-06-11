@@ -1,5 +1,5 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
-import { GetCommand, PutCommand, QueryCommand, ScanCommand } from '@aws-sdk/lib-dynamodb'
+import { GetCommand, PutCommand, QueryCommand, ScanCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
@@ -17,12 +17,19 @@ const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'http://localhost:3000'
 
 const headers = {
   'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': ALLOWED_ORIGIN
+  'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization'
 }
 
 export const handleApiRequest = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const path = event.path || ''
   const method = event.httpMethod || 'GET'
+
+  // CORS preflight
+  if (method === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' }
+  }
 
   try {
     if (path === '/posts' && method === 'GET') {
@@ -62,6 +69,57 @@ export const handleApiRequest = async (event: APIGatewayProxyEvent): Promise<API
         }
       }))
       return { statusCode: 201, headers, body: JSON.stringify({ postId }) }
+    }
+
+    if (path.match(/^\/posts\/[^/]+$/) && method === 'PUT') {
+      const postId = path.split('/')[2]
+      const body = JSON.parse(event.body || '{}')
+      const now = new Date().toISOString()
+
+      // Query existing post to get createdAt
+      const existing = await dynamodb.send(new QueryCommand({
+        TableName: POSTS_TABLE,
+        KeyConditionExpression: 'PK = :pk AND begins_with(SK, :sk)',
+        ExpressionAttributeValues: { ':pk': `POST#${postId}`, ':sk': 'TIMESTAMP#' }
+      }))
+
+      await dynamodb.send(new PutCommand({
+        TableName: POSTS_TABLE,
+        Item: {
+          PK: `POST#${postId}`,
+          SK: `TIMESTAMP#${now}`,
+          postId,
+          title: body.title,
+          content: body.content,
+          featuredImage: body.featuredImage,
+          categoryId: body.categoryId,
+          tags: body.tags || [],
+          isPublished: body.isPublished || false,
+          createdAt: existing.Items?.[0]?.createdAt || now,
+          updatedAt: now
+        }
+      }))
+      return { statusCode: 200, headers, body: JSON.stringify({ postId }) }
+    }
+
+    if (path.match(/^\/posts\/[^/]+$/) && method === 'DELETE') {
+      const postId = path.split('/')[2]
+
+      // Delete all items for this post (using Scan + Delete)
+      const result = await dynamodb.send(new QueryCommand({
+        TableName: POSTS_TABLE,
+        KeyConditionExpression: 'PK = :pk',
+        ExpressionAttributeValues: { ':pk': `POST#${postId}` }
+      }))
+
+      for (const item of result.Items || []) {
+        await dynamodb.send(new PutCommand({
+          TableName: POSTS_TABLE,
+          Item: { ...item, SK: item.SK, deleteFlag: true }
+        }))
+      }
+
+      return { statusCode: 200, headers, body: JSON.stringify({ success: true }) }
     }
 
     if (path === '/categories' && method === 'GET') {

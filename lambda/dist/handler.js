@@ -9,13 +9,20 @@ const CATEGORIES_TABLE = process.env.CATEGORIES_TABLE;
 const TAGS_TABLE = process.env.TAGS_TABLE;
 const COMMENTS_TABLE = process.env.COMMENTS_TABLE;
 const S3_BUCKET = process.env.S3_BUCKET;
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'http://localhost:3000';
 const headers = {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*'
+    'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization'
 };
-export const main = async (event) => {
+export const handleApiRequest = async (event) => {
     const path = event.path || '';
     const method = event.httpMethod || 'GET';
+    // CORS preflight
+    if (method === 'OPTIONS') {
+        return { statusCode: 200, headers, body: '' };
+    }
     try {
         if (path === '/posts' && method === 'GET') {
             const result = await dynamodb.send(new ScanCommand({ TableName: POSTS_TABLE }));
@@ -51,6 +58,50 @@ export const main = async (event) => {
                 }
             }));
             return { statusCode: 201, headers, body: JSON.stringify({ postId }) };
+        }
+        if (path.match(/^\/posts\/[^/]+$/) && method === 'PUT') {
+            const postId = path.split('/')[2];
+            const body = JSON.parse(event.body || '{}');
+            const now = new Date().toISOString();
+            // Query existing post to get createdAt
+            const existing = await dynamodb.send(new QueryCommand({
+                TableName: POSTS_TABLE,
+                KeyConditionExpression: 'PK = :pk AND begins_with(SK, :sk)',
+                ExpressionAttributeValues: { ':pk': `POST#${postId}`, ':sk': 'TIMESTAMP#' }
+            }));
+            await dynamodb.send(new PutCommand({
+                TableName: POSTS_TABLE,
+                Item: {
+                    PK: `POST#${postId}`,
+                    SK: `TIMESTAMP#${now}`,
+                    postId,
+                    title: body.title,
+                    content: body.content,
+                    featuredImage: body.featuredImage,
+                    categoryId: body.categoryId,
+                    tags: body.tags || [],
+                    isPublished: body.isPublished || false,
+                    createdAt: existing.Items?.[0]?.createdAt || now,
+                    updatedAt: now
+                }
+            }));
+            return { statusCode: 200, headers, body: JSON.stringify({ postId }) };
+        }
+        if (path.match(/^\/posts\/[^/]+$/) && method === 'DELETE') {
+            const postId = path.split('/')[2];
+            // Delete all items for this post (using Scan + Delete)
+            const result = await dynamodb.send(new QueryCommand({
+                TableName: POSTS_TABLE,
+                KeyConditionExpression: 'PK = :pk',
+                ExpressionAttributeValues: { ':pk': `POST#${postId}` }
+            }));
+            for (const item of result.Items || []) {
+                await dynamodb.send(new PutCommand({
+                    TableName: POSTS_TABLE,
+                    Item: { ...item, SK: item.SK, deleteFlag: true }
+                }));
+            }
+            return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
         }
         if (path === '/categories' && method === 'GET') {
             const result = await dynamodb.send(new ScanCommand({ TableName: CATEGORIES_TABLE }));
