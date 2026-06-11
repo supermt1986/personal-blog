@@ -2,7 +2,7 @@ import Image from 'next/image'
 
 interface Post {
   title: string
-  content: string
+  content?: string
   featuredImage?: string
   createdAt: string
 }
@@ -21,7 +21,9 @@ export default function PostContent({ post }: { post: Post }) {
           {new Date(post.createdAt).toLocaleDateString('ja-JP')}
         </time>
       </header>
-      <div style={{ fontSize: '1.125rem', lineHeight: '1.8' }} dangerouslySetInnerHTML={{ __html: post.content }} />
+      {post.content && (
+        <div style={{ fontSize: '1.125rem', lineHeight: '1.8' }} dangerouslySetInnerHTML={{ __html: post.content }} />
+      )}
     </article>
   )
 }
