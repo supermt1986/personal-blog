@@ -1,8 +1,50 @@
-import Link from 'next/link'
-import { getPosts } from '@/lib/api'
+'use client'
 
-export default async function AdminPostsPage() {
-  const posts = await getPosts()
+import Link from 'next/link'
+import { useState, useEffect } from 'react'
+
+interface Post {
+  postId: string
+  title: string
+  isPublished: boolean
+  createdAt: string
+}
+
+export default function AdminPostsPage() {
+  const [postList, setPostList] = useState<Post[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchPosts() {
+      try {
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || ''
+        const res = await fetch(`${API_BASE}/posts`)
+        if (res.ok) {
+          const data = await res.json()
+          setPostList(data)
+        }
+      } catch (error) {
+        console.error('Failed to fetch posts:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchPosts()
+  }, [])
+
+  const handleDelete = (postId: string, title: string) => {
+    if (window.confirm(`「${title}」を削除してもよろしいですか？`)) {
+      setPostList(postList.filter(p => p.postId !== postId))
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div style={{ padding: '2rem' }}>
+        <p>読み込み中...</p>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -22,7 +64,7 @@ export default async function AdminPostsPage() {
           </tr>
         </thead>
         <tbody>
-          {posts.map((post) => (
+          {postList.map((post) => (
             <tr key={post.postId} style={{ borderBottom: '1px solid #E5E7EB' }}>
               <td style={{ padding: '0.75rem' }}>{post.title}</td>
               <td style={{ padding: '0.75rem' }}>
@@ -35,7 +77,7 @@ export default async function AdminPostsPage() {
               </td>
               <td style={{ padding: '0.75rem' }}>
                 <Link href={`/admin/posts/${post.postId}`} style={{ marginRight: '1rem' }}>編集</Link>
-                <button style={{ color: '#DC2626' }}>削除</button>
+                <button onClick={() => handleDelete(post.postId, post.title)} style={{ color: '#DC2626' }}>削除</button>
               </td>
             </tr>
           ))}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function EditPostPage({ params }: { params: { id: string } }) {
@@ -8,15 +8,57 @@ export default function EditPostPage({ params }: { params: { id: string } }) {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [isPublished, setIsPublished] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function fetchPost() {
+      try {
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || ''
+        const res = await fetch(`${API_BASE}/posts/${params.id}`)
+        if (res.ok) {
+          const post = await res.json()
+          setTitle(post.title)
+          setContent(post.content)
+          setIsPublished(post.isPublished)
+        }
+      } catch (error) {
+        console.error('Failed to fetch post:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchPost()
+  }, [params.id])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    await fetch('/api/posts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, content, isPublished })
-    })
-    router.push('/admin/posts')
+    setIsSubmitting(true)
+    setError(null)
+    try {
+      const res = await fetch(`/api/posts/${params.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, content, isPublished })
+      })
+      if (!res.ok) {
+        throw new Error('更新に失敗しました')
+      }
+      router.push('/admin/posts')
+    } catch (error) {
+      setError(error instanceof Error ? error.message : '更新に失敗しました')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div style={{ padding: '2rem' }}>
+        <p>読み込み中...</p>
+      </div>
+    )
   }
 
   return (
@@ -37,8 +79,9 @@ export default function EditPostPage({ params }: { params: { id: string } }) {
             公開する
           </label>
         </div>
-        <button type="submit" style={{ padding: '0.75rem 1.5rem', background: 'var(--color-accent)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>
-          保存
+        {error && <p style={{ color: '#DC2626', marginBottom: '1rem' }}>{error}</p>}
+        <button type="submit" disabled={isSubmitting} style={{ padding: '0.75rem 1.5rem', background: 'var(--color-accent)', color: 'white', border: 'none', borderRadius: '6px', cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.6 : 1 }}>
+          {isSubmitting ? '保存中...' : '保存'}
         </button>
       </form>
     </div>
