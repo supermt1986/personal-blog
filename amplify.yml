@@ -1,0 +1,13 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - export NEXT_PUBLIC_API_URL="https://xs6ayvf9fi.execute-api.us-east-1.amazonaws.com/prod"
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
