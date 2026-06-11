@@ -4,7 +4,7 @@ import { BlogDynamoDB } from './dynamodb'
 import { Bucket } from 'aws-cdk-lib/aws-s3'
 import { Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { Function, Runtime, Code } from 'aws-cdk-lib/aws-lambda'
-import { RestApi, LambdaIntegration } from 'aws-cdk-lib/aws-apigateway'
+import { RestApi, LambdaIntegration, MethodOptions } from 'aws-cdk-lib/aws-apigateway'
 
 export class BlogStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -28,8 +28,8 @@ export class BlogStack extends Stack {
 
     const apiHandler = new Function(this, 'ApiHandler', {
       runtime: Runtime.NODEJS_20_X,
-      handler: 'handler.main',
-      code: Code.fromAsset('../lambda'),
+      handler: 'handler.handleApiRequest',
+      code: Code.fromAsset('../lambda/dist'),
       role: lambdaRole,
       environment: {
         POSTS_TABLE: dynamodb.postsTable.tableName,
@@ -40,12 +40,39 @@ export class BlogStack extends Stack {
       }
     })
 
-    const api = new RestApi(this, 'BlogApi')
+    const api = new RestApi(this, 'BlogApi', {
+      defaultIntegration: new LambdaIntegration(apiHandler)
+    })
+
+    // Root
     api.root.addMethod('GET', new LambdaIntegration(apiHandler))
-    api.root.addResource('posts').addMethod('GET', new LambdaIntegration(apiHandler))
-    api.root.addResource('categories').addMethod('GET', new LambdaIntegration(apiHandler))
-    api.root.addResource('tags').addMethod('GET', new LambdaIntegration(apiHandler))
-    api.root.addResource('comments').addMethod('GET', new LambdaIntegration(apiHandler))
-    api.root.addResource('admin').addMethod('POST', new LambdaIntegration(apiHandler))
+
+    // Posts
+    const posts = api.root.addResource('posts')
+    posts.addMethod('GET', new LambdaIntegration(apiHandler))
+    posts.addMethod('POST', new LambdaIntegration(apiHandler))
+
+    // Posts/{id}
+    const postById = posts.addResource('{id}')
+    postById.addMethod('GET', new LambdaIntegration(apiHandler))
+    postById.addMethod('PUT', new LambdaIntegration(apiHandler))
+    postById.addMethod('DELETE', new LambdaIntegration(apiHandler))
+
+    // Posts/{id}/comments
+    const postComments = postById.addResource('comments')
+    postComments.addMethod('GET', new LambdaIntegration(apiHandler))
+    postComments.addMethod('POST', new LambdaIntegration(apiHandler))
+
+    // Categories
+    const categories = api.root.addResource('categories')
+    categories.addMethod('GET', new LambdaIntegration(apiHandler))
+
+    // Tags
+    const tags = api.root.addResource('tags')
+    tags.addMethod('GET', new LambdaIntegration(apiHandler))
+
+    // Admin
+    const admin = api.root.addResource('admin')
+    admin.addMethod('POST', new LambdaIntegration(apiHandler))
   }
 }

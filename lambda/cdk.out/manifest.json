@@ -1,0 +1,389 @@
+{
+  "version": "36.0.0",
+  "artifacts": {
+    "PersonalBlogStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "PersonalBlogStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "PersonalBlogStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "PersonalBlogStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/66bb63a1f015eddee1d08538cae7912b10331f4a24f6f3a0ae6da6aef653e5fe.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "PersonalBlogStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "PersonalBlogStack.assets"
+      ],
+      "metadata": {
+        "/PersonalBlogStack/DynamoDB/Posts/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoDBPosts1D85E0F3"
+          }
+        ],
+        "/PersonalBlogStack/DynamoDB/Categories/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoDBCategories48F2ECC1"
+          }
+        ],
+        "/PersonalBlogStack/DynamoDB/Tags/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoDBTagsA6D5D003"
+          }
+        ],
+        "/PersonalBlogStack/DynamoDB/Comments/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DynamoDBCommentsFBEB669E"
+          }
+        ],
+        "/PersonalBlogStack/ImagesBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ImagesBucket1E86AFB2"
+          }
+        ],
+        "/PersonalBlogStack/LambdaRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaRole3A44B857"
+          }
+        ],
+        "/PersonalBlogStack/LambdaRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaRoleDefaultPolicy75625A82"
+          }
+        ],
+        "/PersonalBlogStack/ApiHandler/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiHandler5E7490E8"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApi17ECE3AB"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/CloudWatchRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApiCloudWatchRole66A88900"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Account": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApiAccountD776435D"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApiDeploymentB3254DE3fb404367a17dd0d345dc59d216669928"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/DeploymentStage.prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApiDeploymentStageprodC8FF7BB4"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApiEndpointAFF8BF23"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/GET/ApiPermission.PersonalBlogStackBlogApiC14BB60A.GET..": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApiGETApiPermissionPersonalBlogStackBlogApiC14BB60AGET80CE337F"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/GET/ApiPermission.Test.PersonalBlogStackBlogApiC14BB60A.GET..": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApiGETApiPermissionTestPersonalBlogStackBlogApiC14BB60AGET41656AC0"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApiGET58CCAF8A"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsC4C4C4BC"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/GET/ApiPermission.PersonalBlogStackBlogApiC14BB60A.GET..posts": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsGETApiPermissionPersonalBlogStackBlogApiC14BB60AGETpostsC7DBC981"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/GET/ApiPermission.Test.PersonalBlogStackBlogApiC14BB60A.GET..posts": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsGETApiPermissionTestPersonalBlogStackBlogApiC14BB60AGETposts6CB9F494"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsGETF3CCB1FA"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/POST/ApiPermission.PersonalBlogStackBlogApiC14BB60A.POST..posts": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsPOSTApiPermissionPersonalBlogStackBlogApiC14BB60APOSTposts62256B08"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/POST/ApiPermission.Test.PersonalBlogStackBlogApiC14BB60A.POST..posts": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsPOSTApiPermissionTestPersonalBlogStackBlogApiC14BB60APOSTpostsD42A5038"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsPOST036ADAF0"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/{id}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsid258FA6B8"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/{id}/GET/ApiPermission.PersonalBlogStackBlogApiC14BB60A.GET..posts.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsidGETApiPermissionPersonalBlogStackBlogApiC14BB60AGETpostsidE2666428"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/{id}/GET/ApiPermission.Test.PersonalBlogStackBlogApiC14BB60A.GET..posts.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsidGETApiPermissionTestPersonalBlogStackBlogApiC14BB60AGETpostsidBE816F6C"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/{id}/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsidGET09CBAA1C"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/{id}/PUT/ApiPermission.PersonalBlogStackBlogApiC14BB60A.PUT..posts.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsidPUTApiPermissionPersonalBlogStackBlogApiC14BB60APUTpostsid778983C8"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/{id}/PUT/ApiPermission.Test.PersonalBlogStackBlogApiC14BB60A.PUT..posts.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsidPUTApiPermissionTestPersonalBlogStackBlogApiC14BB60APUTpostsidD6F77C26"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/{id}/PUT/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsidPUT593963B3"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/{id}/DELETE/ApiPermission.PersonalBlogStackBlogApiC14BB60A.DELETE..posts.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsidDELETEApiPermissionPersonalBlogStackBlogApiC14BB60ADELETEpostsidDAB011FD"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/{id}/DELETE/ApiPermission.Test.PersonalBlogStackBlogApiC14BB60A.DELETE..posts.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsidDELETEApiPermissionTestPersonalBlogStackBlogApiC14BB60ADELETEpostsidA1B6B59E"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/{id}/DELETE/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsidDELETE7EEF5DA1"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/{id}/comments/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsidcommentsD21E7462"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/{id}/comments/GET/ApiPermission.PersonalBlogStackBlogApiC14BB60A.GET..posts.{id}.comments": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsidcommentsGETApiPermissionPersonalBlogStackBlogApiC14BB60AGETpostsidcomments8C89749C"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/{id}/comments/GET/ApiPermission.Test.PersonalBlogStackBlogApiC14BB60A.GET..posts.{id}.comments": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsidcommentsGETApiPermissionTestPersonalBlogStackBlogApiC14BB60AGETpostsidcommentsBCBF5268"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/{id}/comments/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsidcommentsGET68EB4FB6"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/{id}/comments/POST/ApiPermission.PersonalBlogStackBlogApiC14BB60A.POST..posts.{id}.comments": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsidcommentsPOSTApiPermissionPersonalBlogStackBlogApiC14BB60APOSTpostsidcomments511AC8F9"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/{id}/comments/POST/ApiPermission.Test.PersonalBlogStackBlogApiC14BB60A.POST..posts.{id}.comments": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsidcommentsPOSTApiPermissionTestPersonalBlogStackBlogApiC14BB60APOSTpostsidcomments914FCE15"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/posts/{id}/comments/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApipostsidcommentsPOSTD2E29580"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/categories/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApicategoriesCD7566EC"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/categories/GET/ApiPermission.PersonalBlogStackBlogApiC14BB60A.GET..categories": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApicategoriesGETApiPermissionPersonalBlogStackBlogApiC14BB60AGETcategories86342662"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/categories/GET/ApiPermission.Test.PersonalBlogStackBlogApiC14BB60A.GET..categories": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApicategoriesGETApiPermissionTestPersonalBlogStackBlogApiC14BB60AGETcategoriesED13E7C1"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/categories/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApicategoriesGETB6BA4DDD"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/tags/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApitagsF7CDE2A4"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/tags/GET/ApiPermission.PersonalBlogStackBlogApiC14BB60A.GET..tags": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApitagsGETApiPermissionPersonalBlogStackBlogApiC14BB60AGETtags36DC0018"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/tags/GET/ApiPermission.Test.PersonalBlogStackBlogApiC14BB60A.GET..tags": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApitagsGETApiPermissionTestPersonalBlogStackBlogApiC14BB60AGETtagsCAA8A505"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/tags/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApitagsGET17FA6B6A"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/admin/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApiadmin6399BE5B"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/admin/POST/ApiPermission.PersonalBlogStackBlogApiC14BB60A.POST..admin": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApiadminPOSTApiPermissionPersonalBlogStackBlogApiC14BB60APOSTadmin06CE8272"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/admin/POST/ApiPermission.Test.PersonalBlogStackBlogApiC14BB60A.POST..admin": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApiadminPOSTApiPermissionTestPersonalBlogStackBlogApiC14BB60APOSTadmin67C9CC56"
+          }
+        ],
+        "/PersonalBlogStack/BlogApi/Default/admin/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BlogApiadminPOST4F2C7331"
+          }
+        ],
+        "/PersonalBlogStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/PersonalBlogStack/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/PersonalBlogStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/PersonalBlogStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "PersonalBlogStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}

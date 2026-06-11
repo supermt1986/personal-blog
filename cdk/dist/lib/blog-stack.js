@@ -7,7 +7,6 @@ const aws_s3_1 = require("aws-cdk-lib/aws-s3");
 const aws_iam_1 = require("aws-cdk-lib/aws-iam");
 const aws_lambda_1 = require("aws-cdk-lib/aws-lambda");
 const aws_apigateway_1 = require("aws-cdk-lib/aws-apigateway");
-const aws_cognito_1 = require("aws-cdk-lib/aws-cognito");
 class BlogStack extends aws_cdk_lib_1.Stack {
     constructor(scope, id, props) {
         super(scope, id, props);
@@ -43,12 +42,6 @@ class BlogStack extends aws_cdk_lib_1.Stack {
         api.root.addResource('tags').addMethod('GET', new aws_apigateway_1.LambdaIntegration(apiHandler));
         api.root.addResource('comments').addMethod('GET', new aws_apigateway_1.LambdaIntegration(apiHandler));
         api.root.addResource('admin').addMethod('POST', new aws_apigateway_1.LambdaIntegration(apiHandler));
-        const userPool = new aws_cognito_1.UserPool(this, 'BlogUserPool', {
-            userPoolName: 'blog-admin-users'
-        });
-        new aws_cognito_1.UserPoolClient(this, 'BlogAdminClient', {
-            userPool: userPool
-        });
     }
 }
 exports.BlogStack = BlogStack;

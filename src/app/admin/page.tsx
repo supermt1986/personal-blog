@@ -1,10 +1,22 @@
 import { getPosts, getCategories } from '@/lib/api'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 export default async function AdminDashboard() {
-  const posts = await getPosts()
-  const categories = await getCategories()
+  let posts: any[] = []
+  let categories: any[] = []
+
+  try {
+    posts = await getPosts()
+  } catch (e) {
+    console.error('Failed to fetch posts:', e)
+  }
+
+  try {
+    categories = await getCategories()
+  } catch (e) {
+    console.error('Failed to fetch categories:', e)
+  }
 
   return (
     <div>
