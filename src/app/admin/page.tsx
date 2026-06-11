@@ -1,7 +1,5 @@
 import { getPosts, getCategories } from '@/lib/api'
 
-export const revalidate = 60
-
 export default async function AdminDashboard() {
   let posts: any[] = []
   let categories: any[] = []

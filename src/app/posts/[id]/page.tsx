@@ -4,8 +4,6 @@ import PostContent from '@/components/PostContent'
 import CommentList from '@/components/CommentList'
 import CommentForm from '@/components/CommentForm'
 
-export const revalidate = 60
-
 export async function generateStaticParams() {
   try {
     const posts = await getPosts()
