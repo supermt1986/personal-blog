@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { getPosts } from '@/lib/api'
 import PostCard from '@/components/PostCard'
 
+export const revalidate = 60
+
 export default async function HomePage() {
   let posts: any[] = []
   try {

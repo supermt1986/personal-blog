@@ -3,10 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-export function generateStaticParams() {
-  return []
-}
-
 export default function EditPostPage({ params }: { params: { id: string } }) {
   const router = useRouter()
   const [title, setTitle] = useState('')
